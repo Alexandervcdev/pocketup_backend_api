@@ -29,11 +29,6 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
-
     public Usuario(String email, String password, String nombre, String fotoUrl, String pais, String idioma, String moneda, Integer nivel, Integer xp) {
         this.email = email;
         this.password = password;
