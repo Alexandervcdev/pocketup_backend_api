@@ -1,6 +1,8 @@
 package com.pocketup.backend.service;
 
+import com.pocketup.backend.dto.UsuarioLoginRequest;
 import com.pocketup.backend.dto.UsuarioRegistroRequest;
+import com.pocketup.backend.dto.UsuarioRequest;
 import com.pocketup.backend.model.Usuario;
 import com.pocketup.backend.repository.IUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,23 @@ import java.util.Optional;
 public class UsuarioService implements IUsuarioService{
     @Autowired
     private IUsuarioRepository usuario_repository;
+
+    @Override
+    public Usuario registerOrLoginSocial(UsuarioRegistroRequest user) {
+        Optional<Usuario> user_exist = usuario_repository.findByEmail(user.getEmail());
+        if (user_exist.isPresent()) {
+            return user_exist.get();
+        }
+        Usuario new_user = new Usuario();
+        new_user.setNombre(user.getNombre());
+        new_user.setEmail(user.getEmail());
+        // Guardamos el UID de Firebase como password (o algo que indique que es social)
+        new_user.setPassword(user.getPassword());
+        new_user.setNivel(1);
+        new_user.setXp(0);
+        new_user.setMoneda("EUR");
+        return usuario_repository.save(new_user);
+    }
 
     @Override
     public Usuario saveUser(UsuarioRegistroRequest user) {
@@ -39,6 +58,22 @@ public class UsuarioService implements IUsuarioService{
         new_user.setXp(0);
         new_user.setMoneda("EUR");
         return usuario_repository.save(new_user);
+    }
+
+    @Override
+    public Optional<Usuario> findUser(UsuarioRequest user_request) {
+        if(user_request.getId() != null){
+            return usuario_repository.findById(user_request.getId());
+        }
+        if (user_request.getEmail() != null) {
+            return usuario_repository.findByEmail(user_request.getEmail());
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Usuario login(UsuarioLoginRequest loginReq) {
+        return null;
     }
 
 }

@@ -5,7 +5,7 @@ WORKDIR /app
 
 # Copiamos el archivo JAR que genera Spring Boot
 # Asegúrate de que el nombre coincida con el que genera tu Maven
-COPY target/*.jar app.jar
+COPY *.jar app.jar
 
 ENV PORT=7860
 EXPOSE 7860
