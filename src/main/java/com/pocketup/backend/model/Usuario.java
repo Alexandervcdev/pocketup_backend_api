@@ -3,6 +3,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter @Setter
 @Table(name = "usuarios")
@@ -10,8 +13,6 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // Datos de Login (RF 1.1)
     private String email;
     private String password;
 
@@ -25,6 +26,8 @@ public class Usuario {
     // Datos de Gamificación (RF 8.2)
     private Integer nivel = 1;
     private Integer xp = 0;
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Movimiento> movimientos = new ArrayList<>();
 
     public Usuario() {
     }
