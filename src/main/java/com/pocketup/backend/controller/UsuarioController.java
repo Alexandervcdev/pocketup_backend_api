@@ -1,4 +1,5 @@
 package com.pocketup.backend.controller;
+import com.pocketup.backend.dto.UsuarioLoginRequest;
 import com.pocketup.backend.dto.UsuarioRegistroRequest;
 import com.pocketup.backend.dto.UsuarioRequest;
 import com.pocketup.backend.model.Usuario;
@@ -26,21 +27,23 @@ public class UsuarioController {
     }
     @PostMapping("/user/google-auth")
     public ResponseEntity<?> googleAuth(@RequestBody UsuarioRegistroRequest userReq){
-        // Este método no lanza excepción si el email existe
         Usuario usuario = usuario_service.registerOrLoginSocial(userReq);
         return ResponseEntity.ok(usuario);
     }
 
     @GetMapping("/user/get")
     public ResponseEntity<?> getUser(@RequestBody UsuarioRequest userReq){
-        // Llamamos al servicio
         Optional<Usuario> user_optional = usuario_service.findUser(userReq);
-        // Si el usuario está dentro Optional
         if (user_optional.isPresent()) {
             return ResponseEntity.ok(user_optional.get());
         }
-        // Si la optional esta vacio.
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado con los criterios proporcionados");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Usuario> login(@RequestBody UsuarioLoginRequest login_req) {
+        Usuario usuario = usuario_service.login(login_req);
+        return ResponseEntity.ok(usuario);
     }
 
 }
