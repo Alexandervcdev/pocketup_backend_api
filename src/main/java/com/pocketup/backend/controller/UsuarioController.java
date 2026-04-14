@@ -2,16 +2,17 @@ package com.pocketup.backend.controller;
 import com.pocketup.backend.dto.UsuarioLoginRequest;
 import com.pocketup.backend.dto.UsuarioRegistroRequest;
 import com.pocketup.backend.dto.UsuarioRequest;
+import com.pocketup.backend.dto.UsuarioUpdateRequest;
+import com.pocketup.backend.model.ApiError;
 import com.pocketup.backend.model.Usuario;
 import com.pocketup.backend.service.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -46,4 +47,13 @@ public class UsuarioController {
         return ResponseEntity.ok(usuario);
     }
 
+    @PutMapping("/{id}/perfil")
+    public ResponseEntity<?> actualizarPerfil(@PathVariable Long id,
+                                              @RequestBody UsuarioUpdateRequest user_update_request) {
+        Usuario update_user = usuario_service.updateUser(id,user_update_request);
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", update_user.getId());
+        response.put("mensaje", "Perfil actualizado correctamente");
+        return ResponseEntity.ok(response);
+    }
 }

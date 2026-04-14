@@ -3,6 +3,7 @@ package com.pocketup.backend.service;
 import com.pocketup.backend.dto.UsuarioLoginRequest;
 import com.pocketup.backend.dto.UsuarioRegistroRequest;
 import com.pocketup.backend.dto.UsuarioRequest;
+import com.pocketup.backend.dto.UsuarioUpdateRequest;
 import com.pocketup.backend.model.Usuario;
 import com.pocketup.backend.repository.IUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,6 +126,25 @@ public class UsuarioService implements IUsuarioService{
             throw new RuntimeException("Credenciales incorrectas");
         }
         return usuario;
+    }
+
+    @Override
+    public Usuario updateUser(Long id, UsuarioUpdateRequest user_update_request) {
+        Usuario user = usuario_repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
+        if (user_update_request.getNombre() != null && !user_update_request.getNombre().trim().isEmpty()) {
+            user.setNombre(user_update_request.getNombre());
+        }
+        if (user_update_request.getPais() != null) {
+            user.setPais(user_update_request.getPais());
+        }
+        if (user_update_request.getIdioma() != null) {
+            user.setIdioma(user_update_request.getIdioma());
+        }
+        if (user_update_request.getMoneda() != null) {
+            user.setMoneda(user_update_request.getMoneda());
+        }
+        return usuario_repository.save(user);
     }
 
 }

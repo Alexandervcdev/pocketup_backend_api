@@ -3,6 +3,7 @@ package com.pocketup.backend.service;
 import com.pocketup.backend.dto.UsuarioLoginRequest;
 import com.pocketup.backend.dto.UsuarioRegistroRequest;
 import com.pocketup.backend.dto.UsuarioRequest;
+import com.pocketup.backend.dto.UsuarioUpdateRequest;
 import com.pocketup.backend.model.Usuario;
 
 import java.util.Optional;
@@ -12,4 +13,5 @@ public interface IUsuarioService {
     Usuario saveUser(UsuarioRegistroRequest usario);
     Optional <Usuario> findUser(UsuarioRequest user_request);
     Usuario login(UsuarioLoginRequest loginReq);
+    Usuario updateUser(Long id, UsuarioUpdateRequest request);
 }
