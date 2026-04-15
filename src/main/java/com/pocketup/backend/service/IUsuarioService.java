@@ -16,4 +16,5 @@ public interface IUsuarioService {
     Usuario updateUser(Long id, UsuarioUpdateRequest request);
 
     Optional<Usuario> findById(Long id);
+    void deleteUser(Long id);
 }

@@ -66,4 +66,10 @@ public class UsuarioController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/user/delete/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id){
+        usuario_service.deleteUser(id);
+        return ResponseEntity.ok(Map.of("message", "Cuenta eliminada correctamente"));
+    }
+
 }

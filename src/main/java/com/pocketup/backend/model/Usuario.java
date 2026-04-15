@@ -26,7 +26,7 @@ public class Usuario {
     // Datos de Gamificación (RF 8.2)
     private Integer nivel = 1;
     private Integer xp = 0;
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Movimiento> movimientos = new ArrayList<>();
 
     public Usuario() {

@@ -8,6 +8,7 @@ import com.pocketup.backend.model.Usuario;
 import com.pocketup.backend.repository.IUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -150,6 +151,16 @@ public class UsuarioService implements IUsuarioService{
     @Override
     public Optional<Usuario> findById(Long id) {
         return usuario_repository.findById(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser(Long id) {
+        if (usuario_repository.existsById(id)) {
+            usuario_repository.deleteById(id);
+        } else {
+            throw new RuntimeException("Usuario no encontrado");
+        }
     }
 
 }
