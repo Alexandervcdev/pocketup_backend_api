@@ -14,4 +14,6 @@ public interface IUsuarioService {
     Optional <Usuario> findUser(UsuarioRequest user_request);
     Usuario login(UsuarioLoginRequest loginReq);
     Usuario updateUser(Long id, UsuarioUpdateRequest request);
+
+    Optional<Usuario> findById(Long id);
 }

@@ -3,7 +3,6 @@ import com.pocketup.backend.dto.UsuarioLoginRequest;
 import com.pocketup.backend.dto.UsuarioRegistroRequest;
 import com.pocketup.backend.dto.UsuarioRequest;
 import com.pocketup.backend.dto.UsuarioUpdateRequest;
-import com.pocketup.backend.model.ApiError;
 import com.pocketup.backend.model.Usuario;
 import com.pocketup.backend.service.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +17,19 @@ import java.util.Optional;
 @RestController
 public class UsuarioController {
 
+    //Inyeccion de dependencias
     @Autowired
     private IUsuarioService usuario_service;
 
+    //endpoints
+    @GetMapping("/usuario/{id}")
+    public ResponseEntity<?> obtenerPerfilPorId(@PathVariable Long id) {
+        Optional<Usuario> user_optional = usuario_service.findById(id);
+        if (user_optional.isPresent()) {
+            return ResponseEntity.ok(user_optional.get());
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("Usuario no encontrado"));
+    }
     @PostMapping("/user/register")
     public ResponseEntity<?> saveUser(@RequestBody UsuarioRegistroRequest userReq){
         Usuario nuevoUsuario = usuario_service.saveUser(userReq);
@@ -56,4 +65,5 @@ public class UsuarioController {
         response.put("mensaje", "Perfil actualizado correctamente");
         return ResponseEntity.ok(response);
     }
+
 }

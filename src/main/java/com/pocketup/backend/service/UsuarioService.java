@@ -147,4 +147,9 @@ public class UsuarioService implements IUsuarioService{
         return usuario_repository.save(user);
     }
 
+    @Override
+    public Optional<Usuario> findById(Long id) {
+        return usuario_repository.findById(id);
+    }
+
 }
