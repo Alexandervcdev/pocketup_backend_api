@@ -8,6 +8,8 @@ import com.pocketup.backend.repository.IMovimientoRepository;
 import com.pocketup.backend.repository.IUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,9 +58,14 @@ public class MovimientoService implements IMovimientoService {
             throw new RuntimeException("Usuario no encontrado");
         }
         List<Movimiento> movimientos = movimiento_repository.findByUsuarioIdOrderByFechaDesc(usuarioId);
-
         return movimientos.stream()
                 .map(this::mapToResponse) // mapeo de [Movimiento] a [MovimientosResponse]
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
+    public void deleteMovements(List<Long> ids) {
+        movimiento_repository.deleteAllByIdInBatch(ids);
     }
 }

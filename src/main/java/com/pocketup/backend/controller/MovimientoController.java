@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/movimientos") // Ruta base para todo lo relacionado con ingresos/gastos
@@ -31,5 +32,11 @@ public class MovimientoController {
     @GetMapping("/usuario/{id}")
     public ResponseEntity<List<MovimientoResponse>> listarMovimientos(@PathVariable Long id) {
         return ResponseEntity.ok(movimiento_service.GetMovements(id));
+    }
+
+    @DeleteMapping("/movements/delete")
+    public ResponseEntity<?> deleteMovements(@RequestBody List<Long> ids) {
+        movimiento_service.deleteMovements(ids);
+        return ResponseEntity.ok(Map.of("message", "Movimientos eliminados"));
     }
 }

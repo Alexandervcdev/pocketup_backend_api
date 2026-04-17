@@ -21,4 +21,6 @@ public interface IMovimientoService {
      * @return Lista de movimientos.
      */
     List<MovimientoResponse> GetMovements(Long usuarioId);
+
+    void deleteMovements(List<Long> ids);
 }
