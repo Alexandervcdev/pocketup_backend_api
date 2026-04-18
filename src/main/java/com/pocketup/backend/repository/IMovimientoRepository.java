@@ -19,4 +19,5 @@ public interface IMovimientoRepository extends JpaRepository<Movimiento, Long> {
      */
     List<Movimiento> findByUsuarioIdOrderByFechaDesc(Long usuarioId);
 
+    List<Movimiento> findByCategoriaId(Long categoriaId);
 }

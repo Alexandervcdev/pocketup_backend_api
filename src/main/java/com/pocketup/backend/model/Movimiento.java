@@ -20,8 +20,10 @@ public class Movimiento {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MovementType tipo; // Será "INGRESO" o "GASTO"
-//    @Column(nullable = false)
-//    private String categoria; //"Salario", "Inversiones", "Comida"
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoria_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Categoria categoria; //"Salario", "Inversiones", "Comida"
     @Column(length = 500)
     private String nota; // Etiqueta o nota opcional
 //    @Column(name = "archivo_url")

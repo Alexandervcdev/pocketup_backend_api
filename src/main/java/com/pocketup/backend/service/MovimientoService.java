@@ -2,8 +2,10 @@ package com.pocketup.backend.service;
 
 import com.pocketup.backend.dto.MovimientoRequest;
 import com.pocketup.backend.dto.MovimientoResponse;
+import com.pocketup.backend.model.Categoria;
 import com.pocketup.backend.model.Movimiento;
 import com.pocketup.backend.model.Usuario;
+import com.pocketup.backend.repository.ICategoriaRepository;
 import com.pocketup.backend.repository.IMovimientoRepository;
 import com.pocketup.backend.repository.IUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ public class MovimientoService implements IMovimientoService {
     private IMovimientoRepository movimiento_repository;
     @Autowired
     private IUsuarioRepository usuario_repository;
+    @Autowired
+    private ICategoriaRepository categoria_repository;
 
     @Override
     public MovimientoResponse saveMovement(MovimientoRequest movimiento_request) {
@@ -26,6 +30,10 @@ public class MovimientoService implements IMovimientoService {
         if (movimiento_request.getImporte() == null || movimiento_request.getImporte().signum() <= 0) {
             throw new RuntimeException("El importe debe ser mayor a 0");
         }
+        // 2. BUSCAMOS LA CATEGORÍA QUE ELIGIÓ EL USUARIO EN ANDROID
+        Categoria categoria = categoria_repository.findById(movimiento_request.getCategoriaId())
+                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+
         Usuario user = usuario_repository.findById(movimiento_request.getUsuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         Movimiento newMovimiento = new Movimiento();
@@ -33,8 +41,9 @@ public class MovimientoService implements IMovimientoService {
         newMovimiento.setFecha(movimiento_request.getFecha());
         newMovimiento.setTipo(movimiento_request.getTipo());
         newMovimiento.setNota(movimiento_request.getNota());
+        newMovimiento.setCategoria(categoria);
         newMovimiento.setUsuario(user);
-        
+
         Movimiento guardado = movimiento_repository.save(newMovimiento);
         // Devolvemos el DTO en lugar de la entidad
         return mapToResponse(guardado);
@@ -48,7 +57,8 @@ public class MovimientoService implements IMovimientoService {
                 m.getFecha(),
                 m.getTipo(),
                 m.getNota(),
-                m.getUsuario().getId()
+                m.getUsuario().getId(),
+                m.getCategoria()
         );
     }
 

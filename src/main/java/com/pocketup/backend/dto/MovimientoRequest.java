@@ -23,4 +23,5 @@ public class MovimientoRequest {
     // Necesitamos saber a quién pertenece este movimiento.
     // Android nos enviará el ID del usuario logueado.
     private Long usuarioId;
+    private Long categoriaId;
 }

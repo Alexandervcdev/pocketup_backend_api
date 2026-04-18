@@ -1,5 +1,6 @@
 package com.pocketup.backend.dto;
 
+import com.pocketup.backend.model.Categoria;
 import com.pocketup.backend.model.MovementType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,4 +20,5 @@ public class MovimientoResponse {
     private MovementType tipo;
     private String nota;
     private Long usuarioId;
+    private Categoria categoria;
 }
