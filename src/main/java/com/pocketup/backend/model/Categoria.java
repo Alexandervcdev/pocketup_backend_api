@@ -1,5 +1,6 @@
 package com.pocketup.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*; // <-- Esto importa @Entity y el @Id correcto
 import lombok.Getter;
@@ -24,8 +25,8 @@ public class Categoria {
     private String color; // Guardaremos el Hex (ej: "#FF5733")
 
     // Si es NULL, es una categoría predefinida del sistema
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable = true)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Usuario usuario;
 }
