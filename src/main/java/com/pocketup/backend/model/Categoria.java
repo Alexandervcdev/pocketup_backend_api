@@ -2,6 +2,7 @@ package com.pocketup.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*; // <-- Esto importa @Entity y el @Id correcto
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +12,7 @@ import lombok.Setter;
 @Table(name = "categoria")
 public class Categoria {
 
-    @Id // (Asegúrate de que no haya import org.springframework.data.annotation.Id; arriba)
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -29,4 +30,16 @@ public class Categoria {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable = true)
     private Usuario usuario;
+
+    @Column(name = "usuario_id", insertable = false, updatable = false)
+    private Long usuarioId;
+
+    public void setUsuarioId(Long usuarioId) {
+        this.usuarioId = usuarioId;
+        if (usuarioId != null) {
+            Usuario u = new Usuario();
+            u.setId(usuarioId);
+            this.usuario = u;
+        }
+    }
 }
