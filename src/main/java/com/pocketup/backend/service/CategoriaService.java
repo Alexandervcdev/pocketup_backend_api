@@ -4,6 +4,7 @@ import com.pocketup.backend.model.Categoria;
 import com.pocketup.backend.model.Movimiento;
 import com.pocketup.backend.repository.ICategoriaRepository;
 import com.pocketup.backend.repository.IMovimientoRepository;
+import com.pocketup.backend.repository.IPresupuestoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,8 @@ public class CategoriaService implements ICategoriaService {
     private ICategoriaRepository categoria_repository;
     @Autowired
     private IMovimientoRepository movimiento_repository;
+    @Autowired
+    private IPresupuestoRepository presupuesto_repository;
 
     @Override
     public List<Categoria> listarPorUsuario(Long usuarioId) {
@@ -57,6 +60,7 @@ public class CategoriaService implements ICategoriaService {
             m.setCategoria(general);
         }
         movimiento_repository.saveAll(movimientos);
+        presupuesto_repository.eliminarPorCategoriaId(idABorrar);
         categoria_repository.deleteById(idABorrar);
     }
 }

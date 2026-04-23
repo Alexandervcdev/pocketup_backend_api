@@ -21,8 +21,7 @@ public class Movimiento {
     @Column(nullable = false)
     private MovementType tipo; // Será "INGRESO" o "GASTO"
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoria_id", referencedColumnName = "id", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JoinColumn(name = "categoria_id", referencedColumnName = "id", nullable = true) // Cambiado a true
     private Categoria categoria; //"Salario", "Inversiones", "Comida"
     @Column(length = 500)
     private String nota; // Etiqueta o nota opcional

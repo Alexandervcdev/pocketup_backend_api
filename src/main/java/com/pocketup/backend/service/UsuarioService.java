@@ -5,7 +5,7 @@ import com.pocketup.backend.dto.UsuarioRegistroRequest;
 import com.pocketup.backend.dto.UsuarioRequest;
 import com.pocketup.backend.dto.UsuarioUpdateRequest;
 import com.pocketup.backend.model.Usuario;
-import com.pocketup.backend.repository.IUsuarioRepository;
+import com.pocketup.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -157,6 +157,7 @@ public class UsuarioService implements IUsuarioService{
     @Transactional
     public void deleteUser(Long id) {
         if (usuario_repository.existsById(id)) {
+            // 5. Finalmente, borramos al Usuario
             usuario_repository.deleteById(id);
         } else {
             throw new RuntimeException("Usuario no encontrado");
