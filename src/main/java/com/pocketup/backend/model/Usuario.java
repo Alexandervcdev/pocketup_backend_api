@@ -16,17 +16,10 @@ public class Usuario {
     private Long id;
     private String email;
     private String password;
-
-    // Datos de Perfil (RF 2.1 y 2.3)
     private String nombre;
-    private String fotoUrl;
     private String pais;
     private String idioma;
-    private String moneda; // Ej: "EUR", "USD"
-
-    // Datos de Gamificación (RF 8.2)
-    private Integer nivel = 1;
-    private Integer xp = 0;
+    private String moneda;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
@@ -44,18 +37,18 @@ public class Usuario {
     @JsonIgnore
     private List<Categoria> categorias = new ArrayList<>();
 
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Personaje personaje;
+
     public Usuario() {
     }
 
-    public Usuario(String email, String password, String nombre, String fotoUrl, String pais, String idioma, String moneda, Integer nivel, Integer xp) {
+    public Usuario(String email, String password, String nombre, String pais, String idioma, String moneda) {
         this.email = email;
         this.password = password;
         this.nombre = nombre;
-        this.fotoUrl = fotoUrl;
         this.pais = pais;
         this.idioma = idioma;
         this.moneda = moneda;
-        this.nivel = nivel;
-        this.xp = xp;
     }
 }

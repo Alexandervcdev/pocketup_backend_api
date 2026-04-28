@@ -3,6 +3,7 @@ package com.pocketup.backend.service;
 import com.pocketup.backend.dto.MovimientoRequest;
 import com.pocketup.backend.dto.MovimientoResponse;
 import com.pocketup.backend.model.Categoria;
+import com.pocketup.backend.model.MovementType;
 import com.pocketup.backend.model.Movimiento;
 import com.pocketup.backend.model.Usuario;
 import com.pocketup.backend.repository.ICategoriaRepository;
@@ -23,6 +24,8 @@ public class MovimientoService implements IMovimientoService {
     private IUsuarioRepository usuario_repository;
     @Autowired
     private ICategoriaRepository categoria_repository;
+    @Autowired
+    private PersonajeService personaje_service;
 
     @Override
     public MovimientoResponse saveMovement(MovimientoRequest movimiento_request) {
@@ -45,6 +48,10 @@ public class MovimientoService implements IMovimientoService {
         newMovimiento.setUsuario(user);
 
         Movimiento guardado = movimiento_repository.save(newMovimiento);
+        // Damos recompensa de XP (Ejemplo: 10 XP por registrar un gasto, 20 XP por un ingreso)
+        int xpGanada = (guardado.getTipo() == MovementType.INGRESO) ? 20 : 10;
+        personaje_service.sumarExperiencia(guardado.getUsuario().getId(), xpGanada);
+
         // Devolvemos el DTO en lugar de la entidad
         return mapToResponse(guardado);
     }

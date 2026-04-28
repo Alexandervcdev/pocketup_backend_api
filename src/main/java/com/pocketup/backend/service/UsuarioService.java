@@ -4,6 +4,7 @@ import com.pocketup.backend.dto.UsuarioLoginRequest;
 import com.pocketup.backend.dto.UsuarioRegistroRequest;
 import com.pocketup.backend.dto.UsuarioRequest;
 import com.pocketup.backend.dto.UsuarioUpdateRequest;
+import com.pocketup.backend.model.Personaje;
 import com.pocketup.backend.model.Usuario;
 import com.pocketup.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +32,19 @@ public class UsuarioService implements IUsuarioService{
         Optional<Usuario> user_exist = usuario_repository.findByEmail(user.getEmail());
         if (user_exist.isPresent()) {
             return user_exist.get();
+        }else {
+            // ESCENARIO B: Es la primera vez que usa Google Auth (Es un Registro Nuevo).
+            Usuario nuevoUsuario = new Usuario();
+            nuevoUsuario.setEmail(user.getEmail());
+            nuevoUsuario.setNombre(user.getNombre());
+            nuevoUsuario.setPassword(user.getPassword());
+            nuevoUsuario.setMoneda("EUR");
+            nuevoUsuario.setIdioma("Español");
+            nuevoUsuario.setPais("España");
+            Personaje avatarInicial = new Personaje(nuevoUsuario);
+            nuevoUsuario.setPersonaje(avatarInicial);
+            return usuario_repository.save(nuevoUsuario);
         }
-        Usuario new_user = new Usuario();
-        new_user.setNombre(user.getNombre());
-        new_user.setEmail(user.getEmail());
-        // Guardamos el UID de Firebase como password (o algo que indique que es social)
-        new_user.setPassword(user.getPassword());
-        new_user.setNivel(1);
-        new_user.setXp(0);
-        new_user.setMoneda("EUR");
-        return usuario_repository.save(new_user);
     }
 
     /**
@@ -78,10 +82,9 @@ public class UsuarioService implements IUsuarioService{
         new_user.setNombre(user.getNombre());
         new_user.setEmail(user.getEmail());
         new_user.setPassword(user.getPassword()); //Cifrar despues
-
-        new_user.setNivel(1);
-        new_user.setXp(0);
         new_user.setMoneda("EUR");
+        Personaje avatarInicial = new Personaje(new_user);
+        new_user.setPersonaje(avatarInicial);
         return usuario_repository.save(new_user);
     }
 

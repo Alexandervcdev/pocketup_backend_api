@@ -72,4 +72,6 @@ public class UsuarioController {
         return ResponseEntity.ok(Map.of("message", "Cuenta eliminada correctamente"));
     }
 
+
+
 }
