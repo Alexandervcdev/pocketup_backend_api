@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -25,15 +26,15 @@ public interface IMovimientoRepository extends JpaRepository<Movimiento, Long> {
     List<Movimiento> findByCategoriaId(Long categoriaId);
 
 
-    @Query(value = "SELECT SUM(importe) FROM movimiento " +
-            "WHERE usuario_id = :usuarioId " +
-            "AND categoria_id = :categoriaId " +
-            "AND tipo = :tipo " +
-            "AND fecha LIKE :mesAnio",
-            nativeQuery = true) // <-- ESTO APAGA EL TRADUCTOR HQL Y LO HACE INFALIBLE
-    BigDecimal sumarGastosPorCategoriaYMes(
+    @Query("SELECT SUM(m.importe) FROM Movimiento m " +
+            "WHERE m.usuario.id = :usuarioId " +
+            "AND m.categoria.id = :categoriaId " +
+            "AND m.tipo = 'GASTO' " +
+            "AND m.fecha BETWEEN :inicio AND :fin")
+    BigDecimal sumarGastosPorCategoriaYRango(
             @Param("usuarioId") Long usuarioId,
             @Param("categoriaId") Long categoriaId,
-            @Param("tipo") String tipo, // <-- Recibimos un String simple
-            @Param("mesAnio") String mesAnio);
+            @Param("inicio") LocalDate inicio, // <-- Cambiado a LocalDate
+            @Param("fin") LocalDate fin       // <-- Cambiado a LocalDate
+    );
 }

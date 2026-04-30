@@ -12,6 +12,8 @@ public class MetaService implements IMetaService {
 
     @Autowired
     private IMetaRepository meta_repository;
+    @Autowired
+    private IPersonajeService personaje_service;
 
     @Override
     public List<Meta> listarPorUsuario(Long usuarioId) {
@@ -20,6 +22,11 @@ public class MetaService implements IMetaService {
 
     @Override
     public Meta save(Meta meta) {
+        java.time.LocalDate hoy = java.time.LocalDate.now();
+        java.time.LocalDate fechaMeta = java.time.LocalDate.parse(meta.getFechaLimite());
+        if (fechaMeta.isBefore(hoy)) {
+            throw new RuntimeException("La fecha límite no puede ser anterior a hoy");
+        }
         // Por seguridad, asegurarnos de que al crear empiece en 0 si no mandaron nada
         if (meta.getMontoActual() == null) {
             meta.setMontoActual(BigDecimal.ZERO);
@@ -51,10 +58,28 @@ public class MetaService implements IMetaService {
         Meta existente = meta_repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Meta no encontrada"));
 
-        // Sumamos lo que ya tenía más lo nuevo que metemos a la hucha
-        BigDecimal nuevoTotal = existente.getMontoActual().add(cantidadAAnadir);
-        existente.setMontoActual(nuevoTotal);
+        // Guardamos si ya estaba completada antes de sumar
+        boolean yaEstabaCompletada = existente.getMontoActual().compareTo(existente.getMontoObjetivo()) >= 0;
 
-        return meta_repository.save(existente);
+        BigDecimal nuevoTotal = existente.getMontoActual().add(cantidadAAnadir);
+
+        // Tope de seguridad
+        if (nuevoTotal.compareTo(existente.getMontoObjetivo()) > 0) {
+            nuevoTotal = existente.getMontoObjetivo();
+        }
+
+        existente.setMontoActual(nuevoTotal);
+        Meta metaGuardada = meta_repository.save(existente);
+
+        // --- PUNTO 5: PREMIO DE XP ---
+        // Si no estaba completada y ahora sí lo está, ¡PREMIO!
+        boolean ahoraCompletada = metaGuardada.getMontoActual().compareTo(metaGuardada.getMontoObjetivo()) >= 0;
+
+        if (!yaEstabaCompletada && ahoraCompletada) {
+            // Le damos 100 XP por completar una meta (un nivel entero)
+            personaje_service.sumarExperiencia(metaGuardada.getUsuario().getId(), 100);
+        }
+
+        return metaGuardada;
     }
 }

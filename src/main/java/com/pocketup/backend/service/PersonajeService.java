@@ -30,6 +30,25 @@ public class PersonajeService implements IPersonajeService {
         personaje_repository.save(personaje);
     }
 
+    @Override
+    public void cambiarSkin(Long usuarioId, Integer nuevaSkin) {
+        Personaje personaje = personaje_repository.findByUsuarioId(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Avatar no encontrado"));
+
+        int nivelRequerido = 1;
+        if (nuevaSkin == 2) nivelRequerido = 2;
+        if (nuevaSkin == 3) nivelRequerido = 5;
+        if (nuevaSkin == 4) nivelRequerido = 10;
+        if (nuevaSkin == 5) nivelRequerido = 20;
+
+        if (personaje.getNivel() < nivelRequerido) {
+            throw new RuntimeException("Nivel insuficiente para esta skin");
+        }
+
+        personaje.setSkinActiva(nuevaSkin);
+        personaje_repository.save(personaje);
+    }
+
     private void actualizarRango(Personaje personaje) {
         int nivel = personaje.getNivel();
         if (nivel >= 20) {
