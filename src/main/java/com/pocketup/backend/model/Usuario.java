@@ -3,7 +3,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,11 @@ public class Usuario {
     private String pais;
     private String idioma;
     private String moneda;
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime fechaRegistro;
+    @Column(length = 20)
+    private String estado = "ACTIVO";
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore

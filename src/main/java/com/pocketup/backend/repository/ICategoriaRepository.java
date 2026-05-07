@@ -16,6 +16,8 @@ public interface ICategoriaRepository extends JpaRepository<Categoria, Long> {
 
     // Para buscar la categoría que utilizaremos como "General o default"
     Optional<Categoria> findByNombreAndUsuarioIsNull(String nombre);
+
+    List<Categoria> findByUsuarioIsNull();
 }
 
 

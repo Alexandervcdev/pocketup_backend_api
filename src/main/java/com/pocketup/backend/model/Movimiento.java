@@ -13,6 +13,8 @@ public class Movimiento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false) // Hacemos que el nombre sea obligatorio
+    private String nombre;
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal importe;
     @Column(nullable = false)

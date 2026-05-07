@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class MovimientoResponse {
     private Long id;
+    private String nombre;
     private BigDecimal importe;
     private LocalDate fecha;
     private MovementType tipo;

@@ -27,6 +27,16 @@ public class MovimientoController {
     }
 
     /**
+     * Endpoint para editar un movimiento existente.
+     */
+    @PutMapping("/editar/{id}")
+    public ResponseEntity<MovimientoResponse> updateMovement(
+            @PathVariable Long id,
+            @RequestBody MovimientoRequest request) {
+        return ResponseEntity.ok(movimiento_service.updateMovement(id, request));
+    }
+
+    /**
      * Endpoint para obtener el historial de un usuario.
      */
     @GetMapping("/usuario/{id}")

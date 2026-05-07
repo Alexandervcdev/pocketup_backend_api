@@ -40,6 +40,7 @@ public class MovimientoService implements IMovimientoService {
         Usuario user = usuario_repository.findById(movimiento_request.getUsuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         Movimiento newMovimiento = new Movimiento();
+        newMovimiento.setNombre(movimiento_request.getNombre());
         newMovimiento.setImporte(movimiento_request.getImporte());
         newMovimiento.setFecha(movimiento_request.getFecha());
         newMovimiento.setTipo(movimiento_request.getTipo());
@@ -56,10 +57,36 @@ public class MovimientoService implements IMovimientoService {
         return mapToResponse(guardado);
     }
 
+    @Override
+    public MovimientoResponse updateMovement(Long id, MovimientoRequest request) {
+        // 1. Buscamos el movimiento que queremos editar
+        Movimiento existente = movimiento_repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Movimiento no encontrado"));
+
+        // 2. Buscamos la categoría (por si el usuario la cambió)
+        Categoria categoria = categoria_repository.findById(request.getCategoriaId())
+                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+
+        // 3. Actualizamos todos los campos con los nuevos datos del Request
+        existente.setNombre(request.getNombre()); // <-- El nuevo campo
+        existente.setImporte(request.getImporte());
+        existente.setFecha(request.getFecha());
+        existente.setTipo(request.getTipo());
+        existente.setNota(request.getNota());
+        existente.setCategoria(categoria);
+
+        // 4. Guardamos en la base de datos
+        Movimiento actualizado = movimiento_repository.save(existente);
+
+        // 5. Devolvemos la respuesta mapeada
+        return mapToResponse(actualizado);
+    }
+
     // Método auxiliar de "Mapeo"
     private MovimientoResponse mapToResponse(Movimiento m) {
         return new MovimientoResponse(
                 m.getId(),
+                m.getNombre(),
                 m.getImporte(),
                 m.getFecha(),
                 m.getTipo(),

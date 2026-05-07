@@ -1,6 +1,8 @@
 package com.pocketup.backend.service;
 
+import com.pocketup.backend.model.ConfiguracionApp;
 import com.pocketup.backend.model.Personaje;
+import com.pocketup.backend.repository.IConfiguracionAppRepository;
 import com.pocketup.backend.repository.IPersonajeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,22 +12,30 @@ public class PersonajeService implements IPersonajeService {
     @Autowired
     private IPersonajeRepository personaje_repository;
 
-    // Constante: Cuánta XP se necesita para subir un nivel
-    private static final int XP_POR_NIVEL = 100;
+    @Autowired
+    private IConfiguracionAppRepository configRepository; // Inyectamos la BD de ajustes
 
 
     @Override
     public void sumarExperiencia(Long usuarioId, int cantidadXp) {
         Personaje personaje = personaje_repository.findByUsuarioId(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Avatar no encontrado para este usuario"));
+
+        // Leemos la configuración en tiempo real (si no existe, creamos la de por defecto con 100)
+        ConfiguracionApp config = configRepository.findById(1L).orElseGet(() -> {
+            ConfiguracionApp nueva = new ConfiguracionApp();
+            return configRepository.save(nueva);
+        });
+
         int nuevaXpTotal = personaje.getXp() + cantidadXp;
         personaje.setXp(nuevaXpTotal);
-        int nuevoNivel = (nuevaXpTotal / XP_POR_NIVEL) + 1;
-        // 4. Si ha subido de nivel, actualizamos y verificamos si cambia de rango
+
+        // ¡Usamos la variable dinámica de la base de datos!
+        int nuevoNivel = (nuevaXpTotal / config.getXpPorNivel()) + 1;
+
         if (nuevoNivel > personaje.getNivel()) {
             personaje.setNivel(nuevoNivel);
             actualizarRango(personaje);
-            // Aquí en el futuro podríamos añadir lógica para desbloquear Skins
         }
         personaje_repository.save(personaje);
     }

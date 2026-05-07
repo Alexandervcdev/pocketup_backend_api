@@ -15,11 +15,11 @@ import java.time.LocalDate;
 @Setter
 public class MovimientoRequest {
 
+    private String nombre;
     private BigDecimal importe;
     private LocalDate fecha;
     private MovementType tipo;
     private String nota;
-
     // Necesitamos saber a quién pertenece este movimiento.
     // Android nos enviará el ID del usuario logueado.
     private Long usuarioId;

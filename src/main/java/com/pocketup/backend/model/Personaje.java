@@ -28,7 +28,7 @@ public class Personaje {
 
     public Personaje() {}
 
-    public Personaje(Usuario usuario) {
+    public  Personaje(Usuario usuario) {
         this.usuario = usuario;
     }
 }

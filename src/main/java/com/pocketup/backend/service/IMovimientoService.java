@@ -15,6 +15,8 @@ public interface IMovimientoService {
      */
     MovimientoResponse saveMovement(MovimientoRequest request);
 
+    MovimientoResponse updateMovement(Long id, MovimientoRequest request);
+
     /**
      * Obtiene el historial completo de movimientos de un usuario, ordenado del más reciente al más antiguo.
      * @param usuarioId El ID del usuario.
